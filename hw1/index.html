@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HW1</title>
+    </head>
+    <body>
+        <h1>Kyle Betts' (kcb82) HW1</h1>
+
+        <p id="p1">
+            <h3><b>Problem 1:</b></h3>
+            <p><b>A:</b></p> 
+            <p>Marks: Geographical Regions</p>
+            <p>Visual Channels: Unaligned Position X & Y, Color Hue</p>
+            <p><b>B:</b></p> 
+            <p>Marks: Light Blue Rectangles</p>
+            <p>Visual Channels: Horizontal Aligned Position, Vertical Aligned Length</p>
+            <p><b>C:</b></p> 
+            <p>Marks: Circles</p>
+            <p>Visual Channels: Aligned Position Y, Aligned Position X, Color Hue</p>
+        </p>
+
+        <p id="p2">
+            <h3><b>Problem 2:</b></h3>
+            <p><b>A:</b></p>
+            <p>a) number: <b>Is</b> a Canonical Javascript Type</p>
+            <p>b) int: <b>Is Not</b> a Canonical Javascript Type</p>
+            <p>c) unicode: <b>Is Not</b> a Canonical Javascript Type</p>
+            <p>d) array: <b>Is Not</b> a Canonical Javascript Type</p>
+            <p>e) char: <b>Is Not</b> a Canonical Javascript Type</p>
+            <p>f) class: <b>Is Not</b> a Canonical Javascript Type</p>
+            <p>g) regex: <b>Is Not</b> a Canonical Javascript Type</p>
+            <p>h) string: <b>Is</b> a Canonical Javascript Type</p>
+            <p>i) boolean: <b>Is</b> a Canonical Javascript Type</p>
+            <p>j) object: <b>Is</b> a Canonical Javascript Type</p>
+            <p>k) null: <b>Is</b> a Canonical Javascript Type</p>
+            <p>l) function: <b>Is Not</b> a Canonical Javascript Type</p>
+
+            <p><b>B:</b></p>
+            <p>See the console.</p>
+
+            <p><b>C:</b></p>
+            <p>d) array: Calling typeof( ) on an array such as [1, 2, 3] actually returns object.</p>
+            <p>k) null: As seen in part B, Calling typeof( ) on null actually returns object even though null is a canonical type.</p>
+            <p>l) function: Calling typeof( ) on a function actually returns function, even though function is not a canonical type, and is technically an object.</p>
+
+            <script>
+                console.log("Problem 2.B:");
+                console.log("a) number: typeof(1.2) =", typeof(1.2));
+                console.log('h) string: typeof("hello") =', typeof("hello"));
+                console.log("i) boolean: typeof(true) =", typeof(true));
+                console.log("j) object: typeof({key1: 1}) =", typeof({key1: 1}));
+                console.log("k) null: typeof(null) =", typeof(null));
+                console.log("----------------------------------------------------");
+                console.log("Problem 2.C:");
+                console.log("d) array: typeof([1, 2, 3]) =", typeof([1, 2, 3]));
+                console.log("k) null: typeof(null) =", typeof(null));
+                console.log("l) function: typeof(() => {}) =", typeof(() => {}));
+                console.log("----------------------------------------------------");
+            </script>
+        </p>
+
+        <p id="p3">
+            <h3><b>Problem 3:</b></h3>
+            <p>
+                Type Coercion is Javascript's way of converting different types in an expression so that the expression is able to be executed. Javascript does everything it can to not throw an error or exception so some interesting conversions can occur, as seen below.
+            </p>
+            <p>Example 1: true + "1". This example returns "true1" as the boolean true gets converted to a string and then the two strings are concatenated. In Python, this would throw an exception.</p>
+            <p>Example 2: [1, 2, 3] + true. This example returns the string "1,2,3true". The array becomes one big string and true is also converted to a string before they are concatenated. In Python, this would throw an exception.</p>
+
+            <script>
+                console.log("Problem 3:");
+                console.log('Example 1: true + "1" =', true + "1", ", Type =", typeof(true + "1"));
+                console.log("Example 2: [1, 2, 3] + true =", [1, 2, 3] + true, ", Type =", typeof([1, 2, 3] + true))
+            </script>
+        </p>
+
+        <p id="p4">
+            <h3><b>Problem 4:</b></h3>
+            <p>Unreadable work will receive a 0, no exceptions. For this reason, we are encouraged to download our submissions and open it to confirm it functions as expected.</p>
+            <p>Late work will recieve a 0. That being said, we have five slip days to use throughout the semester. Each slip day grants 24 hours extension, and you can use up to three slip days on one particular assignment. A reason to not use slip days though is each remaining slip day when the class is finished grants a bonus of 0.4%.</p>
+        </p>
+
+    </body>
+</html>
