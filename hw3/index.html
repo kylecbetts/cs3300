@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>HW3</title>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+    </head>
+
+    <body>
+        <h3>Kyle Betts' (kcb82) HW3</h3>
+
+        <p id="p1">
+            <h4><b>Problem 1:</b></h4>
+            <svg id="svg1" width=300 height=300></svg>
+
+            <script>
+                let svg1 = d3.select("svg#svg1");
+                let width1 = svg1.attr("width");
+                let height1 = svg1.attr("height");
+
+                // Circle
+                svg1.append("circle")
+                     .attr("cx", 150)
+                     .attr("cy", 150)
+                     .attr("r", 4)
+                     .style("fill", "lightpink");
+
+                // Text Element
+                svg1.append("text")
+                     .text("INFO 3300")
+                     .attr("dominant-baseline", "middle")
+                     .attr("text-anchor", "middle")
+                     .attr("x", width1/2)
+                     .attr("y", height1/2)
+                     .style("color", "black")
+                     .style("font-size", "20px")
+                     .style("font-family", "Verdana, Geneva, sans-serif");
+
+                // Rectangle 1
+                svg1.append("rect")
+                     .attr("x", 44)
+                     .attr("y", 110)
+                     .attr("width", 40)
+                     .attr("height", 30)
+                     .style("fill", "green")
+                     .style("stroke", "orange")
+                     .style("stroke-width", 3);
+
+                // Rectangle 2
+                svg1.append("rect")
+                     .attr("x", 100)
+                     .attr("y", 90)
+                     .attr("width", 25)
+                     .attr("height", 24)
+                     .style("fill", "yellow")
+                     .style("stroke", "blue")
+                     .style("stroke-width", 4);
+
+                // Rectangle 3
+                svg1.append("rect")
+                     .attr("x", 130)
+                     .attr("y", 170)
+                     .attr("width", 12)
+                     .attr("height", 49)
+                     .style("fill", "purple")
+                     .style("stroke", "red")
+                     .style("stroke-width", 5);
+
+            </script>
+        </p>
+
+        <p id="p2">
+            <h4><b>Problem 2:</b></h4>
+            <svg id="svg2" width=360 height=360 style="border: 1px lightgrey solid"></svg>
+
+            <script>
+
+                data = [{"x":1.0 ,"y":9.0}, 
+                        {"x":1.5 ,"y":6.0}, 
+                        {"x":2.5 ,"y":4.0}, 
+                        {"x":4.0 ,"y":2.0}, 
+                        {"x":5.0 ,"y":1.6}, 
+                        {"x":6.0 ,"y":2.4}, 
+                        {"x":7.0 ,"y":3.0}, 
+                        {"x":8.0 ,"y":3.4}, 
+                        {"x":9.0 ,"y":3.6}];
+
+                let svg2 = d3.select("svg#svg2");
+                let width2 = svg2.attr("width");
+                let height2 = svg2.attr("height");
+
+                let padding2 = 20;
+                let textPadding2 = 3;
+
+                xmin = 0;
+                xmax = 10;
+                ymin = 0;
+                ymax = 10;
+
+                // X-scale
+                let xscale = d3.scaleLinear()
+                               .domain([xmin, xmax])
+                               .range([padding2, width2-padding2]);
+
+                // Y-scale
+                let yscale = d3.scaleLinear()
+                               .domain([ymin, ymax])
+                               .range([height2-padding2, padding2]);
+
+                numGridLines = 10
+
+                // Draw Gridlines and Text Labels
+                for (i=0; i<=numGridLines; i++) {
+                    // Vertical Line
+                    svg2.append("path")
+                         .attr("stroke", "grey")
+                         .attr("stroke-width", 1)
+                         .attr("d", `M ${xscale(i)} ${height2-padding2} V ${padding2}`)
+
+                    // Horizontal Line
+                    svg2.append("path")
+                         .attr("stroke", "grey")
+                         .attr("stroke-width", 1)
+                         .attr("d", `M ${padding2} ${yscale(i)} H ${width2-padding2}`)
+
+                    // If we need a Text Label (Line 0, 5, 10)
+                    if (i % 5 === 0) {
+                        // Horizontal Text Label
+                        svg2.append("text")
+                             .text(( (xmax-xmin) / numGridLines) *i)
+                             .attr("x", xscale(i))
+                             .attr("y", height2-padding2+textPadding2)
+                             .attr("dominant-baseline", "hanging")
+                             .attr("text-anchor", "middle")
+                             .style("font-family", "Arial, Helvetica, sans-serif")
+
+                        // Vertical Text Label
+                        svg2.append("text")
+                             .text(( (ymax-ymin) / numGridLines)*i)
+                             .attr("x", padding2-textPadding2)
+                             .attr("y", yscale(i))
+                             .attr("dominant-baseline", "middle")
+                             .attr("text-anchor", "end")
+                             .style("font-family", "Arial, Helvetica, sans-serif")
+                    }
+                }
+
+                data.forEach( (d, i) => {
+                    svg2.append("circle")
+                         .attr("cx", xscale(d.x))
+                         .attr("cy", yscale(d.y))
+                         .attr("r", 10)
+                         .style("fill", "midnightblue")
+                });
+                
+            </script>
+        </p>
+
+        <h4><b>Problem 3:</b></h4>
+
+        <ul id="p3">
+            
+            <li>
+                This is a <b>sequential</b> color scale. I believe this <b>is</b> an effective color scale becuase the varying saturation presents easy to distinguish values. Using only one hue keeps the scale simple.
+            </li>
+            <li>
+                I think this color scale <b>is not</b> effective because of the fact that the hues do not correspond to natural assumption of their meaning. I would not assume yellow is negative sentiment, blue is neutral, and red is positive sentiment. This would lead to confussion in the visualization.
+            </li>
+            <li>
+                <b>Blue-Weak/Tritanomaly</b>, and <b>Blue-Blind/Tritanopia</b> would result in a loss of perceivable hue variation.
+            </li>
+            <li>
+                I <b>would not</b> recommend the rainbow scale to color the countries as the scale of hues does not suit mapping a continuous quantitative value. What does it mean for green to be greater than blue as far as life expectancy goes? It is not intuitive and I would instead suggest a saturation or luminosity scale using a single hue.
+            </li>
+        </ul>
+
+    </body>
+</html>

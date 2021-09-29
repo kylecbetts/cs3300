@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>HW4</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<body>
+    <h3>Kyle Betts' (kcb82) HW4</h3>
+
+    <p id="p1">
+    <h4><b>Problem 1:</b></h4>
+    <div id="div1" style="margin: 20px;"></div>
+    <div id="div2" style="margin: 20px;"></div>
+    <div id="div3" style="margin: 20px;"></div>
+
+    <script>
+        // Load Data
+        d3.json('diamonds.json').then( (data) => {
+            const div1 = d3.select('#div1');
+
+            const chartWidth1 = 400;
+            const chartHeight1 = 400;
+            const padding1 = 5;
+
+            // Crate SVG 1
+            let svg1 = div1.append('svg')
+                           .attr('width', chartWidth1)
+                           .attr('height', chartHeight1);
+
+            // Carat Scale
+            let caratMin = 0;
+            let caratMax = d3.max(data, (d) => d['carat']);
+            const caratScale = d3.scaleLinear()
+                                 .domain([caratMin, caratMax])
+                                 .range([0, chartWidth1 - padding1]);
+
+            // Price Scale
+            let priceMin = 0;
+            let priceMax = d3.max(data, (d) => d['price']);
+            const priceScale = d3.scaleLinear()
+                                 .domain([priceMin, priceMax]) 
+                                 .range([chartHeight1, padding1]);
+
+            // Draw Vertical Grid Lines
+            let x1 = caratMin;
+            while (x1 < caratMax) {
+                svg1.append('line')
+                    .attr('x1', caratScale(x1))
+                    .attr('x2', caratScale(x1))
+                    .attr('y1', 0)
+                    .attr('y2', chartHeight1)
+                    .attr('stroke', 'lightgrey');
+                x1++;
+            }
+
+            // Draw Horizontal Grid Lines
+            let y1 = priceMin;
+            while (y1 < priceMax) {
+                svg1.append('line')
+                    .attr('x1', 0)
+                    .attr('x2', chartWidth1)
+                    .attr('y1', priceScale(y1))
+                    .attr('y2', priceScale(y1))
+                    .attr('stroke', 'lightgrey');
+                y1 += 1000;
+            }
+
+            // Plot Points
+            data.forEach( (d, i) => {
+                svg1.append('circle')
+                    .attr('cx', Math.floor(caratScale(d['carat'])))
+                    .attr('cy', Math.floor(priceScale(d['price'])))
+                    .attr('r', 3)
+                    .style('fill', 'midnightblue')
+                    .style('opacity', 0.4);
+            });
+
+            const div2 = d3.select('#div2');
+
+            const chartWidth2 = 400;
+            const chartHeight2 = 400;
+
+            // Create SVG 2
+            let svg2 = div2.append('svg')
+                           .attr('width', chartWidth2)
+                           .attr('height', chartHeight2);
+
+            // Color Rating Scale
+            let colorRatingMin = 0;
+            let colorRatingMax = 8;
+            const colorRatingScale = d3.scaleLinear()
+                                       .domain([colorRatingMin, colorRatingMax])
+                                       .range([0, chartWidth2]);
+
+            // Draw Vertical Grid Lines
+            let x2 = colorRatingMin;
+            while (x2 < colorRatingMax) {
+                svg2.append('line')
+                    .attr('x1', colorRatingScale(x2))
+                    .attr('x2', colorRatingScale(x2))
+                    .attr('y1', 0)
+                    .attr('y2', chartHeight1)
+                    .attr('stroke', 'lightgrey');
+                x2++;
+            }
+
+            // Draw Horizontal Grid Lines
+            let y2 = priceMin;
+            while (y2 < priceMax) {
+                svg2.append('line')
+                    .attr('x1', 0)
+                    .attr('x2', chartWidth1)
+                    .attr('y1', priceScale(y2))
+                    .attr('y2', priceScale(y2))
+                    .attr('stroke', 'lightgrey');
+                y2 += 1000;
+            }
+
+            data.forEach( (d, i) => {
+                svg2.append('circle')
+                    .attr('cx', Math.floor(colorRatingScale(d['color_rating']) + (Math.random() * 10) - 5))
+                    .attr('cy', Math.floor(priceScale(d['price']) + (Math.random() * 10) - 5))
+                    .attr('r', 3)
+                    .style('fill', 'darkgreen')
+                    .style('opacity', 0.3);
+            });
+
+            const div3 = d3.select('#div3');
+
+            const chartWidth3 = 400;
+            const chartHeight3 = 400;
+            const padding3 = 5;
+
+            // Create SVG 3
+            const svg3 = div3.append('svg')
+                             .attr('width', chartWidth3)
+                             .attr('height', chartHeight3);
+
+            // Price / Carat Scale
+            let pricePerCaratMin = 0;
+            let pricePerCaratMax = d3.max(data, (d) => d['price'] / d['carat']);
+            const pricePerCaratScale = d3.scaleLinear()
+                                         .domain([pricePerCaratMin, pricePerCaratMax])
+                                         .range([chartHeight3, padding3]);
+
+            // Draw Vertical Grid Lines
+            let x3 = colorRatingMin;
+            while (x3 < colorRatingMax) {
+                svg3.append('line')
+                    .attr('x1', colorRatingScale(x3))
+                    .attr('x2', colorRatingScale(x3))
+                    .attr('y1', 0)
+                    .attr('y2', chartHeight3)
+                    .attr('stroke', 'lightgrey');
+                x3++;
+            }
+
+            // Draw Horizontal Grid Lines
+            let y3 = pricePerCaratMin;
+            while (y3 < pricePerCaratMax) {
+                svg3.append('line')
+                    .attr('x1', 0)
+                    .attr('x2', chartWidth3)
+                    .attr('y1', pricePerCaratScale(y3))
+                    .attr('y2', pricePerCaratScale(y3))
+                    .attr('stroke', 'lightgrey');
+                y3 += 1000;
+            }
+
+            data.forEach((d, i) => {
+                svg3.append('circle')
+                    .attr('cx', Math.floor(colorRatingScale(d['color_rating']) + (Math.random() * 10) - 5))
+                    .attr('cy', Math.floor(pricePerCaratScale(d['price'] / d['carat']) + (Math.random() * 10) - 5))
+                    .attr('r', 3)
+                    .style('fill', 'darkred')
+                    .style('opacity', 0.3);
+            });
+
+        })
+    </script>
+
+    This chart may be misleading to a viewer as it appears as if there is a downward slope to the graph due to the
+    rare outliers of each column. This would lead the viewer to possibly believe price/carat decreases as the color
+    rating ranges from 1 to 7. But the truth is, the majority of the data (where the dots have the hightest density),
+    shows no relation between these two variable.
+
+    </p>
+
+    <p id="p2">
+        <h4><b>Problem 2:</b></h4>
+        <div id="div4">
+            <svg id="svg4" width=500 height=500 style="background-color:black"></svg>
+        </div>
+
+        <script>
+            d3.csv('NCAA_shots.csv').then( (data) => {
+
+                data.forEach( (d, i) => {
+                    d['x'] *= 5;
+                    d['y'] *= 5;
+                    d['width'] *= 5;
+                    d['height'] *= 5;
+                });
+
+                let logAttemptExtent = d3.extent(data, (d) => d['log_attempt'])
+                let logAttemptScale = d3.scaleSequential(d3.interpolateViridis)
+                                      .domain(logAttemptExtent);
+
+                let svg4 = d3.select('#svg4');
+
+                data.forEach( (d, i) => {
+                    svg4.append('rect')
+                        .attr("x", d['x'])
+                        .attr("y", d['y'])
+                        .attr("width", d['width'])
+                        .attr("height", d['height'])
+                        .style("fill", logAttemptScale(d['log_attempt']))
+                });
+            });
+        </script>
+
+        Using the logarithmic color scale was an advantage over the linear scale becasue it makes our point more differentiable. 
+        Using the log scale the attempts under the basket are a smaller value, so the scale has a lower maximum. 
+        This means the scale is smaller is size, and small differences in locations with low attempts will 
+        have a greater variabiltiy in color and make them easier to differentiate.
+
+    </p>
+</body>
+
+</html>
