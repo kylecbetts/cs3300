@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HW6</title>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <style>
+            .gridlines line {
+                stroke: lightgrey;
+            }
+      
+            .gridlines .domain {
+                stroke: none;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h3>Kyle Betts' (kcb82) HW6</h3>
+    
+        <p id="p1">
+            <h4><b>Problem 1:</b></h4>
+            <div>
+                <svg id="svg" width=800 height=400></svg>
+            </div>
+
+            <script>
+                const requestData = async function() {
+                    const mariokartRecords = await d3.json('mariokart_records.json');
+                    console.log(mariokartRecords);
+
+                    const svg = d3.select("svg#svg");
+                    const width = svg.attr("width");
+                    const height = svg.attr("height");
+                    const margins = {
+                        top: 10,
+                        right: 10,
+                        bottom: 50,
+                        left: 50
+                    }
+
+                    const chartWidth = width - margins.left - margins.right;
+                    const chartHeight = height - margins.top - margins.bottom;
+
+                    // Grouping for axis and gridlines
+                    let annotations = svg.append("g")
+                                         .attr("id", "annotations");
+
+                    // Grouping for chart area
+                    let chartArea = svg.append('g')
+                                       .attr('id', 'chartArea')
+                                       .attr('transform', `translate(${margins.left},${margins.top})`);
+
+                    // Create Scales
+                    // Create Time parser
+                    const dateParser = d3.timeParse('%Y-%m-%d');
+
+                    // Create time scale
+                    let startTime = dateParser(mariokartRecords['earliest_date']);
+                    let endTime = dateParser(mariokartRecords['latest_date']);
+                    const dateScale = d3.scaleTime()
+                                        .domain([startTime, endTime])
+                                        .range([0,chartWidth]);
+
+                    // Create record scale
+                    let minVal = mariokartRecords['min_value'];
+                    let maxVal = mariokartRecords['max_value'];
+                    const recordScale = d3.scaleLinear()
+                                          .domain([minVal, maxVal])
+                                          .range([chartHeight, 0]);
+
+                    // Create Map Scale
+                    const trackScale = d3.scaleOrdinal(d3.schemeSet1);
+
+                    // Create Axes
+                    let axisPadding = 10;
+                    // Left Axis and Gridlines
+                    let leftAxis = d3.axisLeft(recordScale)
+                    let leftGridLines = d3.axisLeft(recordScale)
+                                          .tickSize(-chartWidth-axisPadding)
+                                          .tickFormat('');
+                    annotations.append('g')
+                               .attr('id', 'leftAxis')
+                               .attr('transform', `translate(${margins.left-axisPadding}, ${margins.top})`)
+                               .call(leftAxis);
+                    annotations.append('g')
+                               .attr('class', 'gridlines')
+                               .attr('transform', `translate(${margins.left-axisPadding}, ${margins.top})`)
+                               .call(leftGridLines);
+
+                    // Bottom Axis and Gridlines
+                    let bottomAxis = d3.axisBottom(dateScale);
+                    let bottomGridLines = d3.axisBottom(dateScale)
+                                            .tickSize(-chartHeight-axisPadding)
+                                            .tickFormat('');
+                    annotations.append('g')
+                               .attr('id', 'bottomAxis')
+                               .attr('transform', `translate(${margins.left}, ${chartHeight+margins.top+axisPadding})`)
+                               .call(bottomAxis);
+                    annotations.append('g')
+                               .attr('class', 'gridlines')
+                               .attr('transform', `translate(${margins.left}, ${chartHeight+margins.top+axisPadding})`)
+                               .call(bottomGridLines);
+
+                    // Setup Line Generator
+                    var lineGen = d3.line()
+                                    .x( d => dateScale(dateParser(d['date'])) )
+                                    .y( d => recordScale(d['record_time']) )
+                                    .curve(d3.curveLinear);
+
+                    // Create group for each track in dataset
+                    tracks = chartArea.selectAll("g")
+                                      .data(mariokartRecords['timeseries'])
+                                      .join("g")
+                                      .attr("class", d => d["track"])
+                                      .style("stroke", d => trackScale(d["track"]))
+
+                    // Create Lines for Each Track
+                    tracks.append("path")
+                          .attr("class", "path")
+                          .attr("fill", "none")
+                          .attr("stroke-width", 2)
+                          .attr("d", d => lineGen(d["values"]));
+
+                    // Create Circles for each new Record
+                    tracks.selectAll("circle")
+                          .data( d => d["values"])
+                          .join("circle")
+                          .attr("r", 2)
+                          .attr("fill", d => trackScale(d["track"]))
+                          .attr("cx", d => dateScale(dateParser(d["date"])))
+                          .attr("cy", d => recordScale(d["record_time"]))
+                             
+                }
+
+                // Call to plot the mario kart records chart
+                requestData();
+            </script>
+        </p>
+    </body>
+</html>
