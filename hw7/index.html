@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HW7</title>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <script src="https://d3js.org/topojson.v3.min.js"></script>
+        <style>
+        
+        .zipOutline {
+            stroke: white;
+            stroke-width: 1px;
+            fill: none;
+        }
+
+        .stateOutline {
+            stroke: darkgrey;
+            stroke-width: 3px;
+            fill: none;
+        }
+  
+        </style>
+    </head>
+
+    <body>
+        <h3>Kyle Betts' (kcb82) HW7</h3>
+    
+        <p id="p1">
+            <h4><b>Problem 1:</b></h4>
+            <div>
+                <svg id="cloropleth" width=990 height=770 style="margin:20px"></svg>
+                <ul id="thresholds"></ul>
+            </div>
+            
+            <script>
+                const requestData = async function() {
+                    const nyincome = await d3.json('ny_income.topo.json');
+                    
+                    // Get zipcodes feature and mesh
+                    let zips = topojson.feature(nyincome, nyincome.objects.zip_codes);
+                    let zipsMesh = topojson.mesh(nyincome, nyincome.objects.zip_codes); 
+                    // Get state mesh
+                    let stateMesh = topojson.mesh(nyincome, nyincome.objects.state); 
+
+                    const svg = d3.select("svg#cloropleth");
+                    const width = svg.attr("width");
+                    const height = svg.attr("height");
+                    const margin = {left: 20, 
+                                    top: 20, 
+                                    right: 20, 
+                                    bottom: 20};
+                    const mapWidth = width - margin.left - margin.right;
+                    const mapHeight = height - margin.top - margin.bottom;
+                    // Grouping for the map
+                    const map = svg.append("g")
+                                   .attr("class", "map")
+                                   .attr("transform",`translate(${margin.left}, ${margin.top})`);
+
+                    // Projection and path generator
+                    let projection = d3.geoMercator().fitSize([mapWidth, mapHeight], zips);
+                    let path = d3.geoPath().projection(projection);
+
+                    // Sequential color scale for incomes
+                    const incomeScaleColors = ["#FBFCBA", "#D9F0A3", "#ADDD8E", "#31A354", "#006837"];
+
+                    // Create array of each income
+                    let incomes = [];
+                    nyincome.objects.zip_codes.geometries.forEach(element => {
+                        incomes.push(element.properties.median_income);
+                    })
+
+                    // Create quintile sequential income scale
+                    const incomeScale = d3.scaleQuantile()
+                                          .domain(incomes)
+                                          .range(incomeScaleColors);
+
+                    // Fill each zipcode according to the income 
+                    map.selectAll("path.zip").data(zips.features)
+                       .join("path")
+                       .attr("class", "zip")
+                       .attr("d", path)
+                       .style("fill", d => incomeScale(d.properties.median_income));
+  
+                    // Add 1px white outline to the zipcodes
+                    map.append("path").datum(zipsMesh)
+                       .attr("class","zipOutline")
+                       .attr("d", path);
+
+                    // Add 3px dark grey outline to the state
+                    map.append("path").datum(stateMesh)
+                       .attr("class","stateOutline")
+                       .attr("d", path);
+                       
+                    // Add marker for Cornell clock tower
+                    let cornellLatitude = 42.4476;
+                    let cornellLongitude =  -76.4850;
+                    map.append("circle")
+                       .attr("r", 5)
+                       .attr("fill", "black")
+                       .attr("transform", `translate(${projection([cornellLongitude, cornellLatitude])})`);
+
+                    // Add list of income scale thresholds 
+                    const format = d3.format("$,.0f")
+                    const thresholds = d3.select("#thresholds");
+                    thresholds.selectAll("li")
+                              .data(incomeScale.quantiles())
+                              .join("li")
+                              .text(d => format(d));
+
+                }
+
+                requestData();
+            </script>
+    </body>
+</html>
