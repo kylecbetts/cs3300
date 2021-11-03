@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HW7</title>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+    </head>
+    <body>
+        <h3>Kyle Betts' (kcb82) HW8</h3>
+        <p id="p1">
+            <h4><b>Problem 1:</b></h4>
+            <div id="barcodes">
+
+            </div>
+    
+            <script>
+                const importData = async function() {
+                    const movieBarcodes = await d3.json('movie_barcodes.json');
+
+                    // Constants
+                    const canvasWidth = 800;
+                    const canvasHeight = 100;
+
+                    const barcodesDiv = d3.select("#barcodes");
+                    movieBarcodes.forEach(movie => {
+                        // Add a div, title, and canvas for each movie
+                        let movieDiv = barcodesDiv.append("div")
+                                              .attr("id", movie["title"])
+                        movieDiv.append("h5")
+                                .text(movie["title"])
+                        let canvas = movieDiv.append("canvas")
+                                         .attr("width", canvasWidth)
+                                         .attr("height", canvasHeight)
+
+                        // Get context, image data, and pixels array for each canvas
+                        let context = canvas.node().getContext('2d');
+                        let imageData = context.getImageData(0, 0, canvasWidth, canvasHeight);
+                        let pixels = imageData.data;
+
+                        movie["bars"].forEach(bar => {
+                            // Parse hex color of each bar into rgb values
+                            let num = parseInt(bar["color"].replace('#', ''), 16);
+                            let r = (num >> 16) & 255;
+                            let g = (num >> 8) & 255;
+                            let b = num & 255;
+
+                            // Draw Vertical Line for each bar
+                            let xPos = bar["x"]
+                            for (let y = 0; y < canvasHeight; y++) {
+                                let startingPos = 4*(y * canvasWidth + xPos);
+                                pixels[startingPos + 0] = r;
+                                pixels[startingPos + 1] = g;
+                                pixels[startingPos + 2] = b;
+                                pixels[startingPos + 3] = 255;
+                            }
+                        })
+                        // Paint image data onto canvas
+                        context.putImageData(imageData, 0, 0)
+                    })
+                }
+
+                importData();
+            </script>
+    </body>
+</html>
