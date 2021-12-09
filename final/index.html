@@ -1,0 +1,100 @@
+<html>
+<head>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+ 	<script src="https://d3js.org/topojson.v3.min.js"></script>
+  <style>
+    /* Avoid overflowing text */
+    .answer {
+      width: 500px;
+    }
+    /* Make the gridlines lighter in #7 */
+    #scatter .gridlines line {
+      stroke: #CCC;
+    }
+    /* Hide the domain lines when drawing gridlines for #7 */
+    #scatter .gridlines .domain {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="header">
+    <h5>
+      <!--- PUT YOUR NAME AND NETID HERE --->
+    </h5>
+  </div>
+  
+  <div class="answer">
+    <h5>#1</h5>
+    <!--- Your answer goes here --->
+  </div>
+  
+  <div class="answer">
+    <h5>#2</h5>
+    <!--- Your answer goes here --->
+  </div>
+  
+  <div class="answer">
+    <h5>#3</h5>
+    <!--- Your answer goes here --->
+  </div>  
+  
+  <div class="answer">
+    <h5>#4</h5>
+    <!--- Your answer goes here --->
+  </div>  
+  
+  <div class="answer">
+    <h5>#5</h5>
+    <!--- Your answer goes here --->
+  </div>  
+  
+  <div class="answer">
+    <h5>#6</h5>
+    <!--- Your answer goes here --->
+  </div>  
+  
+  
+  <div class="answer">
+    <h5>#7</h5>
+    <svg height="400" width="700" id="scatter" style="border:1px solid #ccc"></svg>
+    
+    <!--- Modify 7.js in order to answer this problem --->
+    <script type="text/javascript" src="7.js"></script>
+  </div>
+  
+  
+  <div class="answer">
+    <h5>#8</h5>
+    <svg width=400 height=310 id="line" style="border:1px solid #eee">
+      <line x1=0 y1=300 x2=400 y2=300 stroke="grey" />
+    </svg>
+    <p>Velocity: <input id="velocity" type="text" /></p>
+    <p>Angle in degrees: <input id="angle" type="text" /></p>
+    <button id="submit">Add Trajectory</button>
+    
+    <!--- Modify 8.js in order to answer this problem --->
+    <script type="text/javascript" src="8.js"></script>
+  </div>
+  
+  <div class="answer">
+    <h5>#9</h5>
+    <svg width=500 height=120 id="bars" style="border:1px solid #eee"></svg>
+    
+    <!--- Modify 9.js in order to answer this problem --->
+    <script type="text/javascript" src="9.js"></script>
+  </div>
+  
+  
+  <div class="answer">
+  <h5>#10</h5>
+    <svg width=500 height=500 id="map" style="border:1px solid #eee"></svg>
+    
+    <!--- Modify 10.js in order to answer this problem --->
+    <script type="text/javascript" src="10.js"></script>
+  </div>
+
+    
+</body>
+</html>

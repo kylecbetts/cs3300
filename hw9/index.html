@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HW9</title>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <style>
+            .gridLines line {
+                stroke: lightgrey;
+            }
+
+            .gridLines .domain {
+                stroke: none;
+            }
+        </style>
+    </head>
+    <body>
+        <h3>Kyle Betts' (kcb82) HW9</h3>
+        <p id="p1">
+            <h4><b>Problem 1:</b></h4>
+            I am choosing the Board Games data set since I love board games 
+            and play them quite often. My goal for the visualization is to 
+            see if playing time of board games negatively or positively 
+            effects the rating of games. Also I want to be able to filter 
+            the data by max / min players, and have hover effects to show 
+            game titles when a point is hovered.
+            <div>
+                <svg id="games" width=800 height=600 style="margin:20px"></svg>
+            </div>
+
+            <script>
+                const requestData = async function() {
+                    let boardGames = await d3.csv('board-games.csv');
+
+                    const svg = d3.select("#games");
+                    const width = svg.attr("width");
+                    const height = svg.attr("height");
+                    const margins = {
+                        top: 10,
+                        right: 20,
+                        bottom: 50,
+                        left: 50
+                    }
+                    const chartWidth = width - margins.left - margins.right;
+                    const chartHeight = height - margins.top - margins.bottom;
+
+                    // Grouping for axis and grid lines
+                    let annotations = svg.append("g")
+                                         .attr("id", "annotations");
+
+                    // Grouping for points
+                    let pointsArea = svg.append('g')
+                                        .attr('id', 'pointsArea')
+                                        .attr('transform', `translate(${margins.left},${margins.top})`)
+
+                    // Convert various fields to numbers instead of strings
+                    boardGames.forEach( game => {
+                        game['average_rating'] = Number(game['average_rating']);
+                        game['max_players'] = Number(game['max_players']);
+                        game['min_age'] = Number(game['min_age'])
+                        game['min_players'] = Number(game['min_players']);
+                        game['playing_time'] = Number(game['playing_time']);
+                        game['users_rated'] = Number(game['users_rated']);
+                    })
+
+                    // Filter data set to games with lots of users ratings
+                    let usersRatedMean = d3.mean(boardGames, (d) => d['users_rated']);
+                    boardGames = boardGames.filter( (d) => {
+                        return d['users_rated'] > usersRatedMean;
+                    })
+
+                    console.log(boardGames)
+
+                    // Create Scales
+                    let ratingExtent = d3.extent(boardGames, (d) => d['average_rating']);
+                    let ratingScale = d3.scaleLinear()
+                                        .domain(ratingExtent)
+                                        .range([chartHeight, 0])
+
+                    let playingTimeExtent = d3.extent(boardGames, (d) => d['playing_time']);
+                    let playingTimeScale = d3.scaleLinear()
+                                             .domain(playingTimeExtent)
+                                             .range([0, chartWidth]);
+
+                    let ageScale = d3.scaleOrdinal(d3.schemeSet1);
+
+                    // Create Axes
+                    let leftAxis = d3.axisLeft(ratingScale);
+                    let leftGridLines = d3.axisLeft(ratingScale)
+                                          .tickSize(-chartWidth)
+                                          .tickFormat('');
+
+                    let bottomAxis = d3.axisBottom(playingTimeScale);
+                    let bottomGridLines = d3.axisBottom(playingTimeScale)
+                                            .tickSize(-chartHeight)
+                                            .tickFormat('');
+                    
+                    annotations.append('g')
+                               .attr('class', 'gridLines')
+                               .attr('transform', `translate(${margins.left}, ${margins.top})`)
+                               .call(leftGridLines);
+                    annotations.append('g')
+                               .attr('class', 'gridLines')
+                               .attr('transform', `translate(${margins.left}, ${chartHeight + margins.top})`)
+                               .call(bottomGridLines);
+                    annotations.append('g')
+                               .attr('id', 'leftAxis')
+                               .attr('transform', `translate(${margins.left}, ${margins.top})`)
+                               .call(leftAxis);
+                    annotations.append('g')
+                               .attr('id', 'bottomAxis')
+                               .attr('transform', `translate(${margins.left}, ${chartHeight + margins.top})`)
+                               .call(bottomAxis);
+                    
+                    
+                    
+                }
+
+                requestData();
+            </script>
+        </p>
+    </body>
+</html>
