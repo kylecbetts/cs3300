@@ -19,6 +19,10 @@ let trajectories = [];
 // ** Create a line generator here for your trajectories
 //   Sample trajectory data for one element in *trajectories*:  
 //        [ {"xPos":0,"yPos":0},{"xPos":11.2,"yPos":15.0},{"xPos":32.5,"yPos":49.4}... ]
+const lineGen = d3.line()
+                  .y( d => yScale( d['yPos'] ))
+                  .x( d => xScale( d['xPos'] ))
+                  .curve(d3.curveLinear)
 
 
 function updatePlot() {
@@ -29,9 +33,14 @@ function updatePlot() {
   //   (hint: .attr("stroke", d => d.color)  )
   //  Use the line generator to set up a *d* string for the path
   //  Properly handle the fact that updatePlot may be called more than once
-  
-  
-    
+  console.log(trajectories);
+  lineChart.selectAll('path')
+           .data(trajectories)
+           .join('path')
+           .attr('d', lineGen)
+           .attr('stroke-width', 1)
+           .attr('stroke', d => d['color'])
+           .attr('fill', 'none')
 }
 
 
@@ -48,10 +57,10 @@ submitButton.on("click", function() {
   //    (do not worry about sanitizing input or handling bad data here)
   //  Call addTrajectory(velocity, angle) to add one more trajectory to the *trajectories* array
   //  Call updatePlot() to update the trajectory plot
-  
-  console.log(trajectories);
-  
-  
+  let velocity = Number(velocityInput.property('value'));
+  let angle = Number(angleInput.property('value'))
+  addTrajectory(velocity, angle)
+  updatePlot()
 });
 
 // ----- MAKE YOUR ADDITIONS BETWEEN THESE LINES FOR #8 -----
