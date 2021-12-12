@@ -4,7 +4,6 @@
 d3.json('europe.topojson').then( europe => {
     // Part 2: Select svg
     const map = d3.select('#map');
-    console.log(europe);
 
     // Part 3: Extract feature collection
     let countries = topojson.feature(europe, europe.objects.europe);
